@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "655695332407",
+    "project_id": "crypto-2a08e",
+    "storage_bucket": "crypto-2a08e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655695332407:android:8a22a629cb1fe7b88febb2",
+        "android_client_info": {
+          "package_name": "com.example.cryptomania"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsFHLKqc5bV3TzwdNh13aQDQqvQt1ajHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

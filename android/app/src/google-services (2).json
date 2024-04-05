@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "59668293375",
+    "project_id": "zrainotech",
+    "storage_bucket": "zrainotech.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59668293375:android:429fc6672defefdc2b0eca",
+        "android_client_info": {
+          "package_name": "com.example.cryptomania"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNdBua5txoDZBYP54kBznEVd2bAMFrDI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
