@@ -8,6 +8,7 @@ class CustomText extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final Widget? suffixIcon;
   final bool? obscureText;
+  final ValueChanged<String>? onChanged;
   CustomText({
     this.labelText,
     this.prefixIcon,
@@ -15,10 +16,12 @@ class CustomText extends StatelessWidget {
     this.controller,
     required this.validator,
     this.obscureText=false,
+    this.onChanged,
   });
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: onChanged,
       validator: validator,
       controller: controller,
       obscureText: obscureText!,
@@ -30,6 +33,10 @@ class CustomText extends StatelessWidget {
     );
   }
 }
+
+
+
+
 
 //
 // import 'package:flutter/cupertino.dart';

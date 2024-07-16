@@ -1,7 +1,10 @@
 
 import 'package:cryptomania/Controller/CoinController.dart';
+import 'package:cryptomania/Controller/Texting%20Api.dart';
+import 'package:cryptomania/Deposit.dart';
 import 'package:cryptomania/Login.dart';
 import 'package:cryptomania/SignUp.dart';
+import 'package:cryptomania/Withdrawal.dart';
 import 'package:cryptomania/tab_view/Portfolio_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SignUp(),
+      home: const Login(),
     );
   }
 }

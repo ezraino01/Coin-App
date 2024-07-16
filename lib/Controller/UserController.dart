@@ -3,24 +3,18 @@ import 'package:cryptomania/UserModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-
-
 class UserController {
   final auth = FirebaseAuth.instance;
   late UserCredential? userCredential;
-  final accountCollection = FirebaseFirestore.instance.collection("user");
+  final accountCollection = FirebaseFirestore.instance.collection("users");
   late User? user; // Initialize it with null
-  //
-  // Future<void> initializeUser() async {
-  //   user = auth.currentUser; // Initialize user asynchronously
-  // }
 
   Future<List> signUp({required String email, required String password}) async {
     try {
       final cred = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       user = cred.user;
-      // user?.sendEmailVerification();
+       user?.sendEmailVerification();
     } on FirebaseException catch (e) {
       print('..................$e');
       if (e.code == 'weak password') {
@@ -59,7 +53,13 @@ class UserController {
       final userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       user = userCredential.user;
+
+      if(userCredential.user!.emailVerified==true){
+       // userCredential.user!.sendEmailVerification();
+        return[false, 'email not verified'];
+      }
       return [true, 'Login successful'];
+
     } on FirebaseAuthException catch (e) {
       print(e.code);
       return [false, 'Wrong email and password combination'];
@@ -67,6 +67,144 @@ class UserController {
       print(e.toString());
       return [false, 'An unexpected error occurred'];
     }
+  }
+
+  Future <List<Users>>getAllUsers() async {
+    List<Users> userList = [];
+    try {
+      final data = await accountCollection.get();
+      for(QueryDocumentSnapshot<Map<String, dynamic>> document in data.docs){
+        Users user = Users.fromMap(document.data());
+        userList.add(user);
+        print('All users: ${userList.first.amount}');
+      }
+      // Do something with the userList
+
+    } catch (e) {
+      print('Error getting users: $e');
+    }
+    return userList;
+  }
+
+  // Future<List> BuyCrypto(
+  //     {required String currentPrice, required String selectedCoin, required double amount, required String userDocId}) async {
+  //   final firestore = FirebaseFirestore.instance;
+  //   try {
+  //     // Get user references based on email
+  //     final senderQuery =
+  //     await accountCollection.where('email', isEqualTo: senderEmail).get();
+  //     final receiverQuery = await accountCollection
+  //         .where('email', isEqualTo: receiverEmail)
+  //         .get();
+  //
+  //     if (senderQuery.docs.isNotEmpty && receiverQuery.docs.isNotEmpty) {
+  //       final senderDoc = accountCollection.doc(senderQuery.docs.first.id);
+  //       final receiverDoc = accountCollection.doc(receiverQuery.docs.first.id);
+  //       print('...............Sender............$senderDoc');
+  //       print('..................Receiver.........$receiverDoc');
+  //       // Start a Firestore transaction
+  //       await firestore.runTransaction((transaction) async {
+  //         // Get the latest balances
+  //         final senderData = await transaction.get(senderDoc);
+  //         final receiverData = await transaction.get(receiverDoc);
+  //         double convertSenderBalance = double.parse(senderData['accBalance']);
+  //         double convertReceiverBalance = double.parse(receiverData['accBalance']);
+  //         // Check if the sender has enough balance
+  //         print('...............convertSender............$convertSenderBalance');
+  //         print('..................convertReceiver.........$convertReceiverBalance');
+  //         if (convertSenderBalance >= amount) {
+  //           // Update balances
+  //           print('...............convertSenderBalance............$convertSenderBalance');
+  //           print('..................convertReceiverBalance.........$convertReceiverBalance');
+  //           transaction
+  //               .update(senderDoc, {'accBalance':( convertSenderBalance - amount).toString()});
+  //           transaction.update(
+  //               receiverDoc, {'accBalance': (convertReceiverBalance + amount).toString()});
+  //         } else {
+  //           return [false,'Insufficient balancemmmmmmm'];
+  //           //return [false,'Insufficient balance'];
+  //           // Handle insufficient balance
+  //
+  //         }
+  //         //return [true,'Transaction successfully'];
+  //       });
+  //     } else {
+  //       // return [false,'User not found'];
+  //       //throw Exception('User not found');
+  //       return [false,'User not found based on email'];
+  //       // Handle user not found based on email
+  //
+  //     }
+  //     return [true,'Transaction successfully'];
+  //   } catch (e) {
+  //     print('Transaction failed: $e');
+  //     return [false,'User not found'];
+  //     //throw Exception();
+  //     return [false,'Transaction failure or user not found'];
+  //     // Handle transaction failure or user not found
+  //
+  //   }
+  //
+  // }
+  //
+  Future<List> buyCrypto({
+  required String currentPrice,
+  required String selectedCoin,
+  required double amount,
+  required String userDocId,
+  }) async {
+  final firestore = FirebaseFirestore.instance;
+  final accountCollection = firestore.collection('users');
+
+  try {
+  final userDoc = accountCollection.doc(userDocId);
+  print('User Document: $userDoc');
+
+  // Check if the document exists
+  final docSnapshot = await userDoc.get();
+  if (!docSnapshot.exists) {
+  await userDoc.set({
+  'balance': '1000.0', // You can set an initial balance here
+  'holdings': {}
+  });
+  print('Created a new user document with initial balance');
+  }
+
+  return await firestore.runTransaction((transaction) async {
+  final userData = await transaction.get(userDoc);
+
+  double userBalance = double.parse(userData['balance'].toString());
+  Map<String, dynamic> userHoldings = Map<String, dynamic>.from(userData['holdings'] ?? {});
+
+  print('User Balance: $userBalance');
+  if (userBalance >= amount) {
+  double cryptoAmount = amount / double.parse(currentPrice);
+  print('Crypto Amount: $cryptoAmount');
+
+  double newBalance = userBalance - amount;
+  transaction.update(userDoc, {'balance': newBalance.toString()});
+
+  if (userHoldings.containsKey(selectedCoin)) {
+  userHoldings[selectedCoin] += cryptoAmount;
+  } else {
+  userHoldings[selectedCoin] = cryptoAmount;
+  }
+  transaction.update(userDoc, {'holdings': userHoldings});
+
+  print('Transaction completed successfully');
+  return [true, 'Transaction successful'];
+  } else {
+  print('Insufficient balance');
+  return [false, 'Insufficient balance'];
+  }
+  }).catchError((e) {
+  print('Transaction failed inside transaction: $e');
+  return [false, 'Transaction failure or user not found'];
+  });
+  } catch (e) {
+  print('Transaction failed: $e');
+  return [false, 'Transaction failure or user not found'];
+  }
   }
 
 
