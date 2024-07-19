@@ -1,14 +1,13 @@
 //
 // import 'dart:io';
 // import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:cryptomania/Controller/ImageController.dart';
-// import 'package:cryptomania/Login.dart';
-// import 'package:cryptomania/ProfileWidget/Settings.dart';
-// import 'package:cryptomania/UserModel.dart';
+// import 'package:cryptomania/Terms%20and%20Conditions.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart';
+// import 'package:cryptomania/UserModel.dart';
+// import 'package:cryptomania/Login.dart';
 //
 // class Profile extends StatefulWidget {
 //   final Users users;
@@ -18,10 +17,8 @@
 // }
 //
 // class _ProfileState extends State<Profile> {
-//
 //   XFile? fileImage;
 //   String? _imagePath;
-//
 //   @override
 //   void initState() {
 //     super.initState();
@@ -29,22 +26,31 @@
 //   }
 //
 //   Future<void> _loadImagePath() async {
-//     DocumentSnapshot userDoc = await FirebaseFirestore.instance
-//         .collection('users')
-//         .doc(widget.users.ID)
-//         .get();
-//     if (userDoc.exists) {
-//       setState(() {
-//         _imagePath = userDoc['profileImage'];
-//       });
+//     try {
+//       DocumentSnapshot userDoc = await FirebaseFirestore.instance
+//           .collection('users')
+//           .doc(widget.users.ID)
+//           .get();
+//       if (userDoc.exists) {
+//         setState(() {
+//           _imagePath = userDoc['profile_images'];
+//         });
+//       }
+//     } catch (e) {
+//       print('Error loading image path: $e');
 //     }
 //   }
 //
 //   Future<void> _saveImagePath(String path) async {
-//     await FirebaseFirestore.instance
-//         .collection('users')
-//         .doc(widget.users.ID)
-//         .update({'profileImage': path});
+//     try {
+//       await FirebaseFirestore.instance
+//           .collection('users')
+//           .doc(widget.users.ID)
+//           .update({'profile_images': path});
+//       print('Image path saved successfully.');
+//     } catch (e) {
+//       print('Error saving image path: $e');
+//     }
 //   }
 //
 //   Future<void> selectImage() async {
@@ -54,25 +60,49 @@
 //       setState(() {
 //         _imagePath = downloadURL;
 //       });
-//       _saveImagePath(downloadURL);
+//       await _saveImagePath(downloadURL);
 //     }
 //   }
 //
 //   Future<String> _uploadImage(XFile image) async {
-//     Reference storageReference =
-//     FirebaseStorage.instance.ref().child('profile_images/${widget.users.ID}');
-//     UploadTask uploadTask = storageReference.putFile(File(image.path));
-//     TaskSnapshot taskSnapshot = await uploadTask;
-//     return await taskSnapshot.ref.getDownloadURL();
+//     try {
+//       Reference storageReference = FirebaseStorage.instance
+//           .ref()
+//           .child('profile_images/${widget.users.ID}');
+//       UploadTask uploadTask = storageReference.putFile(File(image.path));
+//       TaskSnapshot taskSnapshot = await uploadTask;
+//       String downloadURL = await taskSnapshot.ref.getDownloadURL();
+//       print('Image uploaded successfully: $downloadURL');
+//       return downloadURL;
+//     } catch (e) {
+//       print('Error uploading image: $e');
+//       return '';
+//     }
 //   }
 //
+//   Future<XFile?> imagePicker() async {
+//     try {
+//       XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);
+//       if (file != null) {
+//         return file;
+//       } else {
+//         print('No image selected');
+//         return null;
+//       }
+//     } catch (e) {
+//       print('Error picking image: $e');
+//       return null;
+//     }
+//   }
+//
+//   @override
 //   Widget build(BuildContext context) {
-//     double height = MediaQuery.of(context).size.height; // Extract username
+//     double height = MediaQuery.of(context).size.height;
 //     return Scaffold(
 //       body: Padding(
 //         padding: const EdgeInsets.all(8.0),
 //         child: SingleChildScrollView(
-//           physics: ScrollPhysics(),
+//           physics: const ScrollPhysics(),
 //           child: Column(
 //             crossAxisAlignment: CrossAxisAlignment.start,
 //             children: [
@@ -99,20 +129,20 @@
 //                             backgroundColor: Colors.white,
 //                             child: fileImage != null
 //                                 ? Image.file(
-//                               File(fileImage!.path),
-//                               fit: BoxFit.cover,
-//                               height: 100,
-//                               width: 100,
-//                             )
-//                                 : (widget.users.profileImage != null &&
-//                                 widget.users.profileImage!.isNotEmpty)
-//                                 ? Image.network(
-//                               widget.users.profileImage!,
-//                               fit: BoxFit.cover,
-//                               height: 100,
-//                               width: 100,
-//                             )
-//                                 : Icon(Icons.photo_size_select_actual_sharp),
+//                                     File(fileImage!.path),
+//                                     fit: BoxFit.cover,
+//                                     height: 100,
+//                                     width: 100,
+//                                   )
+//                                 : (_imagePath != null && _imagePath!.isNotEmpty)
+//                                     ? Image.network(
+//                                         _imagePath!,
+//                                         fit: BoxFit.cover,
+//                                         height: 100,
+//                                         width: 100,
+//                                       )
+//                                     : const Icon(
+//                                         Icons.photo_size_select_actual_sharp),
 //                           ),
 //                         ),
 //                       ),
@@ -125,7 +155,7 @@
 //                       children: [
 //                         Text(
 //                           widget.users.name,
-//                           style: TextStyle(
+//                           style: const TextStyle(
 //                               fontSize: 20,
 //                               fontStyle: FontStyle.italic,
 //                               color: Colors.white),
@@ -139,318 +169,77 @@
 //                   ),
 //                 ],
 //               ),
-//               SizedBox(
-//                 height: 10,
+//               const SizedBox(
+//                 height: 20,
 //               ),
 //               InkWell(
-//                 onTap: () {},
+//                 onTap: () {
+//                   Navigator.push(context,
+//                       MaterialPageRoute(builder: (context) => const Login()));
+//                 },
 //                 child: Container(
-//                   height: height * 0.08,
-//                   width: double.infinity,
-//                   color: Colors.white,
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.history,
-//                             size: 35,
-//                             color: Colors.green,
-//                           ),
-//                           SizedBox(
-//                             width: 15,
-//                           ),
-//                           Text(
-//                             'History',
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
-//                       ),
-//                       Icon(Icons.arrow_forward_ios),
-//                     ],
+//                   decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.circular(10),
+//                     color: Colors.grey[100],
 //                   ),
-//                 ),
-//               ),
-//               InkWell(
-//                 onTap: () {},
-//                 child: Container(
-//                   height: height * 0.08,
+//                   height: 50,
 //                   width: double.infinity,
-//                   color: Colors.grey[100],
-//                   child: Row(
+//                   child: const Row(
 //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                     children: [
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.food_bank_outlined,
-//                             size: 35,
-//                             color: Colors.green,
-//                           ),
-//                           SizedBox(
-//                             width: 15,
-//                           ),
-//                           Text(
-//                             'Bank Details',
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
+//                       Icon(
+//                         Icons.logout,
+//                         color: Colors.black45,
+//                         size: 30,
 //                       ),
-//                       Icon(Icons.arrow_forward_ios),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               InkWell(
-//                 onTap: () {},
-//                 child: Container(
-//                   height: height * 0.08,
-//                   width: double.infinity,
-//                   color: Colors.white,
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.notifications,
-//                             size: 35,
+//                       Text(
+//                         'LogOut',
+//                         style: TextStyle(
 //                             color: Colors.green,
-//                           ),
-//                           SizedBox(
-//                             width: 15,
-//                           ),
-//                           Text(
-//                             'Notification',
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
+//                             fontSize: 20,
+//                             fontWeight: FontWeight.bold),
 //                       ),
-//                       Icon(Icons.arrow_forward_ios),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               InkWell(
-//                 onTap: () {},
-//                 child: Container(
-//                   height: height * 0.08,
-//                   width: double.infinity,
-//                   color: Colors.grey[100],
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.security,
-//                             size: 35,
-//                             color: Colors.green,
-//                           ),
-//                           SizedBox(
-//                             width: 15,
-//                           ),
-//                           Text(
-//                             'Security',
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
+//                       Icon(
+//                         Icons.arrow_forward_ios,
+//                         color: Colors.black45,
+//                         size: 30,
 //                       ),
-//                       Icon(Icons.arrow_forward_ios),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               InkWell(
-//                 onTap: () {},
-//                 child: Container(
-//                   height: height * 0.08,
-//                   width: double.infinity,
-//                   color: Colors.white,
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.help,
-//                             size: 35,
-//                             color: Colors.green,
-//                           ),
-//                           SizedBox(
-//                             width: 15,
-//                           ),
-//                           Text(
-//                             'Help and Support',
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
-//                       ),
-//                       Icon(Icons.arrow_forward_ios),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               InkWell(onTap: (){},
-//                 child: Container(
-//                   height: height * 0.08,
-//                   width: double.infinity,
-//                   color: Colors.grey[100],
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.settings,
-//                             size: 35,
-//                             color: Colors.green,
-//                           ),
-//                           SizedBox(
-//                             width: 15,
-//                           ),
-//                           InkWell(
-//                             onTap: () {
-//                               // Navigator.push(
-//                               //     context,
-//                               //     MaterialPageRoute(
-//                               //         builder: (context) => const Settings()));
-//                             },
-//                             child: Text(
-//                               'Settings',
-//                               style: TextStyle(fontSize: 20),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                       Icon(Icons.arrow_forward_ios),
 //                     ],
 //                   ),
 //                 ),
 //               ),
 //               InkWell(
 //                 onTap: () {
-//                   Navigator.pushAndRemoveUntil(
-//                     context,
-//                     MaterialPageRoute(builder: (context) => Login()),
-//                         (Route<dynamic> route) => false,
-//                   );
+//                   Navigator.push(context,
+//                       MaterialPageRoute(builder: (context) => Terms()));
 //                 },
 //                 child: Container(
-//                   height: height * 0.08,
-//                   width: double.infinity,
-//                   color: Colors.white,
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.logout,
-//                             size: 35,
-//                             color: Colors.green,
-//                           ),
-//                           SizedBox(
-//                             width: 15,
-//                           ),
-//                           Text(
-//                             'Log Out',
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
-//                       ),
-//                       Icon(Icons.arrow_forward_ios),
-//                     ],
+//                   decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.circular(10),
+//                     color: Colors.white,
 //                   ),
-//                 ),
-//               ),
-//               InkWell(
-//                 onTap: () {},
-//                 child: Container(
-//                   height: height * 0.08,
+//                   height: 50,
 //                   width: double.infinity,
-//                   color: Colors.grey[100],
-//                   child: Row(
+//                   child: const Row(
 //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                     children: [
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.storage,
-//                             size: 35,
-//                             color: Colors.green,
-//                           ),
-//                           SizedBox(
-//                             width: 15,
-//                           ),
-//                           Text(
-//                             'Storage',
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
+//                       Icon(
+//                         Icons.branding_watermark_sharp,
+//                         color: Colors.black45,
+//                         size: 30,
 //                       ),
-//                       Icon(Icons.arrow_forward_ios),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               InkWell(
-//                 onTap: () {},
-//                 child: Container(
-//                   height: height * 0.08,
-//                   width: double.infinity,
-//                   color: Colors.white,
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.branding_watermark_sharp,
-//                             size: 35,
+//                       Text(
+//                         'Terms and Condition',
+//                         style: TextStyle(
 //                             color: Colors.green,
-//                           ),
-//                           SizedBox(
-//                             width: 15,
-//                           ),
-//                           Text(
-//                             'Terms and Condition',
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
+//                             fontSize: 20,
+//                             fontWeight: FontWeight.bold),
 //                       ),
-//                       Icon(Icons.arrow_forward_ios),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//               InkWell(
-//                 onTap: () {},
-//                 child: Container(
-//                   height: height * 0.08,
-//                   width: double.infinity,
-//                   color: Colors.white,
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Row(
-//                         children: [
-//                           Icon(
-//                             Icons.notifications,
-//                             size: 35,
-//                             color: Colors.green,
-//                           ),
-//                           SizedBox(
-//                             width: 15,
-//                           ),
-//                           Text(
-//                             'Notification',
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
+//                       Icon(
+//                         Icons.arrow_forward_ios,
+//                         color: Colors.black45,
+//                         size: 30,
 //                       ),
-//                       Icon(Icons.arrow_forward_ios),
 //                     ],
 //                   ),
 //                 ),
@@ -463,17 +252,9 @@
 //   }
 // }
 
-// Future<XFile?> imagePicker() async {
-//   XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);
-//   if (file != null) {
-//     return file;
-//   } else {
-//     print('no image selected');
-//     return null;
-//   }
-// }
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cryptomania/Controller/UserController.dart';
 import 'package:cryptomania/Terms%20and%20Conditions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -481,6 +262,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cryptomania/UserModel.dart';
 import 'package:cryptomania/Login.dart';
+
 
 class Profile extends StatefulWidget {
   final Users users;
@@ -490,12 +272,23 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final UserController userController = UserController();
   XFile? fileImage;
   String? _imagePath;
   @override
   void initState() {
     super.initState();
     _loadImagePath();
+  }
+
+  Future<void> _logOut() async {
+    try {
+      await userController.logOut();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Login()),
+          (Route<dynamic> route) => false);
+    } catch (e) {}
   }
 
   Future<void> _loadImagePath() async {
@@ -568,6 +361,22 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  void _showProfilePicture() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: Container(
+          padding: EdgeInsets.all(8.0),
+          child: _imagePath != null
+              ? Image.network(_imagePath!)
+              : fileImage != null
+                  ? Image.file(File(fileImage!.path))
+                  : Icon(Icons.photo_size_select_actual_sharp, size: 100),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -575,7 +384,7 @@ class _ProfileState extends State<Profile> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
-          physics: ScrollPhysics(),
+          physics: const ScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -590,6 +399,9 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   InkWell(
+                    onDoubleTap: () {
+                      _showProfilePicture();
+                    },
                     onTap: () {
                       selectImage();
                     },
@@ -647,8 +459,7 @@ class _ProfileState extends State<Profile> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Login()));
+                  _logOut();
                 },
                 child: Container(
                   decoration: BoxDecoration(

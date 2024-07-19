@@ -1,3 +1,5 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cryptomania/UserModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -84,6 +86,15 @@ class UserController {
       print('Error getting users: $e');
     }
     return userList;
+  }
+
+  Future<void>logOut()async{
+    try{
+      await FirebaseAuth.instance.signOut();
+
+    }catch(error){
+      print('error logging out: $error');
+    }
   }
 
   // Future<List> BuyCrypto(

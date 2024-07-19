@@ -20,7 +20,7 @@ class _DepositAndWithdrawalState extends State<InterFace> {
     double Height = MediaQuery.of(context).size.height;
     double Width = MediaQuery.of(context).size.width;
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -29,7 +29,7 @@ class _DepositAndWithdrawalState extends State<InterFace> {
         ),
         body: TabBarView(children: [
           HomeView(users:widget.users,),
-          Portfolio(users:widget.users,),
+         // Portfolio(users:widget.users,),
         //  Trade(users: widget.users,),
           Market(),
           Profile(users: widget.users,),
@@ -39,10 +39,10 @@ class _DepositAndWithdrawalState extends State<InterFace> {
             icon: Icon(Icons.home),
             text: 'Home',
           ),
-          Tab(
-            icon: Icon(Icons.pie_chart_rounded),
-            text: 'Portfolio',
-          ),
+          // Tab(
+          //   icon: Icon(Icons.pie_chart_rounded),
+          //   text: 'Portfolio',
+          // ),
           // Tab(
           //   icon: Icon(Icons.card_giftcard),
           //   text: 'Trade',
