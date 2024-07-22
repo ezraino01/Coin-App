@@ -19,7 +19,6 @@ class CoinController{
       );
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
-        // Assuming the data structure is like: {"data": [ ... ]}
         if (data.containsKey("data")) {
           List<dynamic> values = data["data"];
           if (values.length > 0) {
