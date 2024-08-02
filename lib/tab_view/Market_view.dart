@@ -15,7 +15,7 @@ class Market extends StatefulWidget {
 class _MarketState extends State<Market> {
   final CoinController coinController = CoinController();
   late Timer _timer;
-  final Duration _refreshInterval = const Duration(seconds: 1);
+  final Duration _refreshInterval = const Duration(hours: 1);
 
   @override
   void initState() {

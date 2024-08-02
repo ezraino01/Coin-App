@@ -49,10 +49,12 @@ dependencies:
   cloud_firestore: ^4.15.10
   image_picker: ^1.1.0
   google_sign_in: ^6.2.1
+  sign_in_with_apple: ^6.1.1
   url_launcher: ^6.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 
 

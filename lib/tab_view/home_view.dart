@@ -21,7 +21,7 @@ class _HomeViewState extends State<HomeView> {
   List<Coin> coinList = [];
   final CoinController coinController= CoinController();
   late  Timer _timer;
-  final Duration _duration= Duration(seconds: 1);
+  final Duration _duration= Duration(hours: 1);
 
   @override
   void initState() {
