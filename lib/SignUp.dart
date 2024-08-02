@@ -227,11 +227,15 @@
 //   }
 // }
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cryptomania/Controller/UserController.dart';
 import 'package:cryptomania/Login.dart';
 import 'package:cryptomania/UserModel.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'CustomText.dart';
+import 'InterFace.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -251,6 +255,74 @@ class _SignUpState extends State<SignUp> {
   bool isSwitch = false;
   bool circularProgressIndicator = false;
   final _FormKey = GlobalKey<FormState>();
+  Future<User?> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) {
+      return null;
+    }
+    final GoogleSignInAuthentication googleAuth =
+    await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+    final UserCredential userCredential =
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    final User? user = userCredential.user;
+
+    return user;
+  }
+
+  Future<void> signInWithApple() async {
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      final userCredential =
+      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
+      final user = userCredential.user;
+
+      if (user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login successful')),
+        );
+
+        await userController.getUser(uid: user.uid).then(
+              (myUser) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => InterFace(users: myUser),
+              ),
+            );
+          },
+        );
+
+        if (userController.user == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('User not found')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Apple sign-in failed')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $error')),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -422,29 +494,58 @@ class _SignUpState extends State<SignUp> {
                 ),
                 Row(
                   children: [
-                    InkWell(
-                      onTap: () {},
-                      child: const CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/apple.png'),
-                        //  child:  Image.network('https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcQjzC2JyZDZ_RaWf0qp11K0lcvB6b6kYNMoqtZAQ9hiPZ4cTIOB&psig=AOvVaw1JGP2TQhUeaR7xspaA-Xqr&ust=1712417613629000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCIiAv-6yq4UDFQAAAAAdAAAAABAE'),
-                      ),
+                    CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/apple.png'),
                     ),
                     SizedBox(width: 20),
-                    Text('continue with Apple'),
+                    InkWell(
+                      onTap: () async {
+                        await signInWithApple();
+                      },
+                      child: Text('continue with Apple'),
+                    ),
                   ],
                 ),
                 SizedBox(height: 10),
                 Row(
                   children: [
-                    InkWell(
-                      onTap: () {},
-                      child: const CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/google.png'),
-                        //  child:  Image.network('https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcQjzC2JyZDZ_RaWf0qp11K0lcvB6b6kYNMoqtZAQ9hiPZ4cTIOB&psig=AOvVaw1JGP2TQhUeaR7xspaA-Xqr&ust=1712417613629000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCIiAv-6yq4UDFQAAAAAdAAAAABAE'),
-                      ),
+                    CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/google.png'),
                     ),
-                    const SizedBox(width: 20),
-                    const Text('continue with Google'),
+                    SizedBox(width: 20),
+                    InkWell(
+                      onTap: () async {
+                        User? user = await signInWithGoogle();
+                        if (user != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Login successful')),
+                          );
+
+                          await userController.getUser(uid: user.uid).then(
+                                (myUser) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      InterFace(users: myUser),
+                                ),
+                              );
+                            },
+                          );
+
+                          if (userController.user == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('User not found')),
+                            );
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Google sign-in failed')),
+                          );
+                        }
+                      },
+                      child: Text('continue with Google'),
+                    ),
                   ],
                 ),
                 // Row(
