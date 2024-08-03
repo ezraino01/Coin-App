@@ -17,13 +17,14 @@ class UserController {
           email: email, password: password);
       user = cred.user;
        user?.sendEmailVerification();
+      return [true, 'Verification email sent'];
     } on FirebaseException catch (e) {
       print('..................$e');
       if (e.code == 'weak password') {
         return [false, 'the password you provided is weak'];
       } else if (e.code == 'email already in use') {
         print('...........................$e');
-        return [false, 'an account with same email alrready exist'];
+        return [false, 'an account with same email already exist'];
       }
     } catch (e) {
       return [false, e.toString()];
@@ -40,6 +41,12 @@ class UserController {
       print('not working........................');
       // Handle any potential exceptions here
     }
+  }
+
+  Future<bool>isEmailVerified()async{
+    await user!.reload();
+    user=auth.currentUser;
+    return user!.emailVerified;
   }
 
   Future<Users> getUser({required String uid})async{
@@ -217,8 +224,6 @@ class UserController {
   return [false, 'Transaction failure or user not found'];
   }
   }
-
-
 
 }
 
