@@ -103,8 +103,8 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     await user.reload();
     if (user.emailVerified) {
       timer.cancel();
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => Login()));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
     }
   }
 
@@ -130,6 +130,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               },
               child: Text('Resend Email'),
             ),
+            MaterialButton(onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Login()));
+            })
           ],
         ),
       ),

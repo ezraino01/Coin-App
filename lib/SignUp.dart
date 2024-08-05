@@ -595,6 +595,21 @@ class _SignUpState extends State<SignUp> {
                                   EmailVerificationScreen(),
                             ),
                           );
+                          if (userController.user != null) {
+                            await userController.registeration(
+                              user: Users(
+                                ID: userController.user!.uid,
+                                name: nameController.text,
+                                email: emailController.text,
+                                password: passwordController.text,
+                                amount: '2000.0',
+                              ),
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => Login()),
+                            );
+                          }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(result[1])),

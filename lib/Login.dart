@@ -423,6 +423,7 @@ class _LoginState extends State<Login> {
                     Icon(Icons.arrow_forward, color: Colors.green),
                   ],
                 ),
+
                 MaterialButton(
                   height: 45,
                   minWidth: double.infinity,
@@ -457,18 +458,11 @@ class _LoginState extends State<Login> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      InterFace(users: myUser),
+                                  builder: (context) => InterFace(users: myUser),
                                 ),
                               );
                             },
                           );
-
-                          if (userController.user == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('User not found')),
-                            );
-                          }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(result[1])),
@@ -486,6 +480,7 @@ class _LoginState extends State<Login> {
                     }
                   },
                 ),
+
                 SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

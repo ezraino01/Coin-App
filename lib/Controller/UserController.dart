@@ -57,26 +57,34 @@ class UserController {
       rethrow;
     }
   }
+
+
   Future<List> login({required String email, required String password}) async {
     try {
       final userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       user = userCredential.user;
 
-      if(userCredential.user!.emailVerified==true){
-       // userCredential.user!.sendEmailVerification();
-        return[false, 'email not verified'];
+      if (user != null) {
+        if (!user!.emailVerified) {
+          return [false, 'Email not verified'];
+        }
+        return [true, 'Login successful'];
+      } else {
+        return [false, 'User not found'];
       }
-      return [true, 'Login successful'];
-
     } on FirebaseAuthException catch (e) {
-      print(e.code);
-      return [false, 'Wrong email and password combination'];
+      if (e.code == 'user-not-found') {
+        return [false, 'No user found for that email'];
+      } else if (e.code == 'wrong-password') {
+        return [false, 'Wrong password provided'];
+      }
+      return [false, e.message];
     } catch (e) {
-      print(e.toString());
-      return [false, 'An unexpected error occurred'];
+      return [false, e.toString()];
     }
   }
+
 
   Future <List<Users>>getAllUsers() async {
     List<Users> userList = [];
@@ -226,4 +234,6 @@ class UserController {
   }
 
 }
+
+
 
