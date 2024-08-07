@@ -1,4 +1,3 @@
-
 // import 'package:cryptomania/Email%20verification%20Page.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:flutter/material.dart';
@@ -361,7 +360,7 @@
 //   }
 // }
 
-
+import 'package:cryptomania/Terms%20and%20Conditions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cryptomania/Controller/UserController.dart';
@@ -399,11 +398,11 @@ class _SignUpState extends State<SignUp> {
       return null;
     }
     final GoogleSignInAuthentication googleAuth =
-    await googleUser.authentication;
+        await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
     final UserCredential userCredential =
-    await FirebaseAuth.instance.signInWithCredential(credential);
+        await FirebaseAuth.instance.signInWithCredential(credential);
     final User? user = userCredential.user;
 
     return user;
@@ -424,7 +423,7 @@ class _SignUpState extends State<SignUp> {
       );
 
       final userCredential =
-      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+          await FirebaseAuth.instance.signInWithCredential(oauthCredential);
 
       final user = userCredential.user;
 
@@ -434,7 +433,7 @@ class _SignUpState extends State<SignUp> {
         );
 
         await userController.getUser(uid: user.uid).then(
-              (myUser) {
+          (myUser) {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -491,7 +490,8 @@ class _SignUpState extends State<SignUp> {
                   validator: (String? value) {
                     if (value!.isEmpty) {
                       return 'Email is required';
-                    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                        .hasMatch(value)) {
                       return 'Enter a valid email';
                     }
                     return null;
@@ -553,7 +553,10 @@ class _SignUpState extends State<SignUp> {
                       },
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Terms()));
+                      },
                       child: Text('Terms and Conditions'),
                     ),
                   ],
@@ -565,9 +568,9 @@ class _SignUpState extends State<SignUp> {
                   child: isSwitch && circularProgressIndicator
                       ? CircularProgressIndicator()
                       : Text(
-                    'Sign up',
-                    style: TextStyle(fontSize: 20),
-                  ),
+                          'Sign up',
+                          style: TextStyle(fontSize: 20),
+                        ),
                   color: isSwitch ? Colors.green : Colors.grey,
                   minWidth: double.infinity,
                   height: 50,
@@ -591,8 +594,7 @@ class _SignUpState extends State<SignUp> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  EmailVerificationScreen(),
+                              builder: (context) => EmailVerificationScreen(),
                             ),
                           );
                           if (userController.user != null) {
@@ -669,11 +671,12 @@ class _SignUpState extends State<SignUp> {
                           );
 
                           await userController.getUser(uid: user.uid).then(
-                                (myUser) {
+                            (myUser) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => InterFace(users: myUser),
+                                  builder: (context) =>
+                                      InterFace(users: myUser),
                                 ),
                               );
                             },

@@ -1,5 +1,3 @@
-
-
 // import 'package:cryptomania/Controller/UserController.dart';
 // import 'package:cryptomania/CustomText.dart';
 // import 'package:cryptomania/InterFace.dart';
@@ -260,7 +258,6 @@
 //   }
 // }
 
-
 import 'package:cryptomania/Controller/UserController.dart';
 import 'package:cryptomania/CustomText.dart';
 import 'package:cryptomania/InterFace.dart';
@@ -270,6 +267,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
+import 'ResetPassword.dart';
 
 class Login extends StatefulWidget {
   final Users? users;
@@ -299,11 +298,11 @@ class _LoginState extends State<Login> {
       return null;
     }
     final GoogleSignInAuthentication googleAuth =
-    await googleUser.authentication;
+        await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
     final UserCredential userCredential =
-    await FirebaseAuth.instance.signInWithCredential(credential);
+        await FirebaseAuth.instance.signInWithCredential(credential);
     final User? user = userCredential.user;
 
     return user;
@@ -324,7 +323,7 @@ class _LoginState extends State<Login> {
       );
 
       final userCredential =
-      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+          await FirebaseAuth.instance.signInWithCredential(oauthCredential);
 
       final user = userCredential.user;
 
@@ -334,7 +333,7 @@ class _LoginState extends State<Login> {
         );
 
         await userController.getUser(uid: user.uid).then(
-              (myUser) {
+          (myUser) {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -419,11 +418,15 @@ class _LoginState extends State<Login> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                        onPressed: () {}, child: Text('Forget your password')),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => ForgotPasswordDialog());
+                        },
+                        child: Text('Forget your password')),
                     Icon(Icons.arrow_forward, color: Colors.green),
                   ],
                 ),
-
                 MaterialButton(
                   height: 45,
                   minWidth: double.infinity,
@@ -454,11 +457,12 @@ class _LoginState extends State<Login> {
                           await userController
                               .getUser(uid: userController.user!.uid)
                               .then(
-                                (myUser) {
+                            (myUser) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => InterFace(users: myUser),
+                                  builder: (context) =>
+                                      InterFace(users: myUser),
                                 ),
                               );
                             },
@@ -480,7 +484,6 @@ class _LoginState extends State<Login> {
                     }
                   },
                 ),
-
                 SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -520,7 +523,7 @@ class _LoginState extends State<Login> {
                           );
 
                           await userController.getUser(uid: user.uid).then(
-                                (myUser) {
+                            (myUser) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

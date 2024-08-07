@@ -1,35 +1,34 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cryptomania/UserModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class UserController {
   final auth = FirebaseAuth.instance;
   late UserCredential? userCredential;
   final accountCollection = FirebaseFirestore.instance.collection("users");
-  late User? user; // Initialize it with null
+  late User? user;
 
   Future<List> signUp({required String email, required String password}) async {
     try {
       final cred = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       user = cred.user;
-       user?.sendEmailVerification();
+      user?.sendEmailVerification();
       return [true, 'Verification email sent'];
-    } on FirebaseException catch (e) {
-      print('..................$e');
-      if (e.code == 'weak password') {
-        return [false, 'the password you provided is weak'];
-      } else if (e.code == 'email already in use') {
-        print('...........................$e');
-        return [false, 'an account with same email already exist'];
+    } on FirebaseAuthException catch (e) {
+      print('Error code: ${e.code}');
+      print('Error message: ${e.message}');
+      if (e.code == 'weak-password') {
+        return [false, 'The password you provided is weak'];
+      } else if (e.code == 'email-already-in-use') {
+        return [false, 'An account with the same email already exists'];
+      } else {
+        return [false, 'Error: ${e.message}'];
       }
     } catch (e) {
+      print('Unexpected error: $e');
       return [false, e.toString()];
     }
-    return [true, 'signUp successful, verify your email'];
   }
 
   Future<void> registeration({required Users user}) async {
@@ -43,21 +42,20 @@ class UserController {
     }
   }
 
-  Future<bool>isEmailVerified()async{
+  Future<bool> isEmailVerified() async {
     await user!.reload();
-    user=auth.currentUser;
+    user = auth.currentUser;
     return user!.emailVerified;
   }
 
-  Future<Users> getUser({required String uid})async{
-    try{
-      final myUser= await accountCollection.doc(uid).get();
+  Future<Users> getUser({required String uid}) async {
+    try {
+      final myUser = await accountCollection.doc(uid).get();
       return Users.fromMap(myUser.data()!);
-    }catch(e){
+    } catch (e) {
       rethrow;
     }
   }
-
 
   Future<List> login({required String email, required String password}) async {
     try {
@@ -85,30 +83,42 @@ class UserController {
     }
   }
 
-
-  Future <List<Users>>getAllUsers() async {
+  Future<List<Users>> getAllUsers() async {
     List<Users> userList = [];
     try {
       final data = await accountCollection.get();
-      for(QueryDocumentSnapshot<Map<String, dynamic>> document in data.docs){
+      for (QueryDocumentSnapshot<Map<String, dynamic>> document in data.docs) {
         Users user = Users.fromMap(document.data());
         userList.add(user);
         print('All users: ${userList.first.amount}');
       }
       // Do something with the userList
-
     } catch (e) {
       print('Error getting users: $e');
     }
     return userList;
   }
 
-  Future<void>logOut()async{
-    try{
+  Future<void> logOut() async {
+    try {
       await FirebaseAuth.instance.signOut();
-
-    }catch(error){
+    } catch (error) {
       print('error logging out: $error');
+    }
+  }
+
+  Future<List> resetPassword({required String email}) async {
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+      return [true, 'Password reset email sent'];
+    } on FirebaseException catch (e) {
+      if (e.code == 'user-not-found') {
+        return [false, 'user not found'];
+      } else {
+        return [false, e.message];
+      }
+    } catch (e) {
+      return [false, e.toString()];
     }
   }
 
@@ -174,66 +184,63 @@ class UserController {
   // }
   //
   Future<List> buyCrypto({
-  required String currentPrice,
-  required String selectedCoin,
-  required double amount,
-  required String userDocId,
+    required String currentPrice,
+    required String selectedCoin,
+    required double amount,
+    required String userDocId,
   }) async {
-  final firestore = FirebaseFirestore.instance;
-  final accountCollection = firestore.collection('users');
+    final firestore = FirebaseFirestore.instance;
+    final accountCollection = firestore.collection('users');
 
-  try {
-  final userDoc = accountCollection.doc(userDocId);
-  print('User Document: $userDoc');
+    try {
+      final userDoc = accountCollection.doc(userDocId);
+      print('User Document: $userDoc');
 
-  // Check if the document exists
-  final docSnapshot = await userDoc.get();
-  if (!docSnapshot.exists) {
-  await userDoc.set({
-  'balance': '1000.0', // You can set an initial balance here
-  'holdings': {}
-  });
-  print('Created a new user document with initial balance');
+      // Check if the document exists
+      final docSnapshot = await userDoc.get();
+      if (!docSnapshot.exists) {
+        await userDoc.set({
+          'balance': '1000.0', // You can set an initial balance here
+          'holdings': {}
+        });
+        print('Created a new user document with initial balance');
+      }
+
+      return await firestore.runTransaction((transaction) async {
+        final userData = await transaction.get(userDoc);
+
+        double userBalance = double.parse(userData['balance'].toString());
+        Map<String, dynamic> userHoldings =
+            Map<String, dynamic>.from(userData['holdings'] ?? {});
+
+        print('User Balance: $userBalance');
+        if (userBalance >= amount) {
+          double cryptoAmount = amount / double.parse(currentPrice);
+          print('Crypto Amount: $cryptoAmount');
+
+          double newBalance = userBalance - amount;
+          transaction.update(userDoc, {'balance': newBalance.toString()});
+
+          if (userHoldings.containsKey(selectedCoin)) {
+            userHoldings[selectedCoin] += cryptoAmount;
+          } else {
+            userHoldings[selectedCoin] = cryptoAmount;
+          }
+          transaction.update(userDoc, {'holdings': userHoldings});
+
+          print('Transaction completed successfully');
+          return [true, 'Transaction successful'];
+        } else {
+          print('Insufficient balance');
+          return [false, 'Insufficient balance'];
+        }
+      }).catchError((e) {
+        print('Transaction failed inside transaction: $e');
+        return [false, 'Transaction failure or user not found'];
+      });
+    } catch (e) {
+      print('Transaction failed: $e');
+      return [false, 'Transaction failure or user not found'];
+    }
   }
-
-  return await firestore.runTransaction((transaction) async {
-  final userData = await transaction.get(userDoc);
-
-  double userBalance = double.parse(userData['balance'].toString());
-  Map<String, dynamic> userHoldings = Map<String, dynamic>.from(userData['holdings'] ?? {});
-
-  print('User Balance: $userBalance');
-  if (userBalance >= amount) {
-  double cryptoAmount = amount / double.parse(currentPrice);
-  print('Crypto Amount: $cryptoAmount');
-
-  double newBalance = userBalance - amount;
-  transaction.update(userDoc, {'balance': newBalance.toString()});
-
-  if (userHoldings.containsKey(selectedCoin)) {
-  userHoldings[selectedCoin] += cryptoAmount;
-  } else {
-  userHoldings[selectedCoin] = cryptoAmount;
-  }
-  transaction.update(userDoc, {'holdings': userHoldings});
-
-  print('Transaction completed successfully');
-  return [true, 'Transaction successful'];
-  } else {
-  print('Insufficient balance');
-  return [false, 'Insufficient balance'];
-  }
-  }).catchError((e) {
-  print('Transaction failed inside transaction: $e');
-  return [false, 'Transaction failure or user not found'];
-  });
-  } catch (e) {
-  print('Transaction failed: $e');
-  return [false, 'Transaction failure or user not found'];
-  }
-  }
-
 }
-
-
-
