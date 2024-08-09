@@ -1,23 +1,21 @@
 import 'dart:async';
 
-import 'package:cryptomania/Controller/CoinController.dart';
-import 'package:cryptomania/Controller/coinCard.dart';
-import 'package:cryptomania/UserModel.dart';
+import 'package:cryptomania/SignUp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-import '../Controller/CoinsModel.dart';
+import 'Controller/CoinController.dart';
+import 'Controller/CoinsModel.dart';
+import 'Controller/coinCard.dart';
 
-class HomeView extends StatefulWidget {
-  final Users users;
-  const HomeView({Key? key, required this.users}) : super(key: key);
+class GuestPage extends StatefulWidget {
+  const GuestPage({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<GuestPage> createState() => _GuestPageState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _GuestPageState extends State<GuestPage> {
   List<Coin> coinList = [];
   final CoinController coinController= CoinController();
   late  Timer _timer;
@@ -118,93 +116,94 @@ class _HomeViewState extends State<HomeView> {
     double Height = MediaQuery.of(context).size.height;
     double Width = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(),
         body: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(
-        physics: ScrollPhysics(),
-        child: Column(
-          children: [
-            Stack(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
               children: [
-                Container(
-                  height: Height * 0.2,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(20)),
-                ),
-                Positioned(
-                  left: 25,
-                  top: 90,
-                  child: MaterialButton(
-                    onPressed: () {},
-                    child: Container(
-                      child: Center(
-                          child: Text(
-                        'Invest Today',
-                        style: TextStyle(color: Colors.green),
-                      )),
-                      height: 30,
-                      width: Width * 0.35,
+                Stack(
+                  children: [
+                    Container(
+                      height: Height * 0.2,
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(20)),
                     ),
-                  ),
-                ),
-                Positioned(
-                    left: 15,
-                    top: 10,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Welcome ${widget.users.name},',
-                          style: TextStyle(color: Colors.white),
+                    Positioned(
+                      left: 25,
+                      top: 90,
+                      child: MaterialButton(
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp()));},
+                        child: Container(
+                          child: Center(
+                              child: Text(
+                                'SignUp',
+                                style: TextStyle(color: Colors.green),
+                              )),
+                          height: 30,
+                          width: Width * 0.35,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
                         ),
-                        Text(
-                          'Make your first Investment',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        )
-                      ],
-                    )),
-              ],
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Trending Coins',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.black54),
+                      ),
+                    ),
+                    Positioned(
+                        left: 15,
+                        top: 10,
+                        child: Column(
+                          children: [
+                            Text(
+                              'Hello Guest !!!',
+                              style: TextStyle(color: Colors.white,fontSize: 23),
+                            ),
+                            Text(
+                              'Welcome to Bee Coin Cap,\n do well to SignUp',
+                              style: TextStyle(color: Colors.white, fontSize: 15),
+                            )
+                          ],
+                        )),
+                  ],
                 ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Trending Coins',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black54),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 14,),
+                Container(
+                  height: Height*0.57,
+                  child:
+                  ListView.builder(
+                    itemCount: coinList.length,
+                    itemBuilder: (context, index) {
+                      return CoinCard(
+                        price: coinList[index].price.toDouble(),
+                        changePercentage: coinList[index].changePercentage.toDouble(),
+                        change: coinList[index].change.toDouble(),
+                        symbol: coinList[index].symbol,
+                        name: coinList[index].name,
+                        imageUrl: coinList[index].imageUrl,
+                      );
+                    },
+                  ),
+                )
               ],
             ),
-            SizedBox(height: 14,),
-            Container(
-              height: Height*0.5,
-              child:
-              ListView.builder(
-                itemCount: coinList.length,
-                itemBuilder: (context, index) {
-                  return CoinCard(
-                    price: coinList[index].price.toDouble(),
-                    changePercentage: coinList[index].changePercentage.toDouble(),
-                    change: coinList[index].change.toDouble(),
-                    symbol: coinList[index].symbol,
-                    name: coinList[index].name,
-                    imageUrl: coinList[index].imageUrl,
-                  );
-                },
-              ),
-            )
-          ],
-        ),
-      ),
-    ));
+          ),
+        ));
   }
 }

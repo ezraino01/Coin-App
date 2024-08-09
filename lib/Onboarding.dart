@@ -1,3 +1,4 @@
+import 'package:cryptomania/Guest_page.dart';
 import 'package:cryptomania/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -149,7 +150,7 @@ class _OnboardingState extends State<Onboarding> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Login()));
+                                          builder: (context) => GuestPage()));
                                 },
                                 child: Text(
                                   'Continue as a guest',
@@ -166,7 +167,35 @@ class _OnboardingState extends State<Onboarding> {
                               color: Colors.green[100],
                             )
                           ],
-                        )
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Login()));
+                                },
+                                child: Text(
+                                  'Continue as a User',
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.green),
+                                )),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Icon(
+                              Icons.person_2_rounded,
+                              color: Colors.green,
+                            )
+                          ],
+                        ),
                       ],
                     ),
                   ),
