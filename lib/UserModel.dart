@@ -95,7 +95,6 @@ class Users {
       "amount": amount,
     };
   }
-
   Users copyWith({
     String? name,
     String? email,
