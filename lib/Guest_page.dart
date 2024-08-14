@@ -17,9 +17,9 @@ class GuestPage extends StatefulWidget {
 
 class _GuestPageState extends State<GuestPage> {
   List<Coin> coinList = [];
-  final CoinController coinController= CoinController();
-  late  Timer _timer;
-  final Duration _duration= Duration(hours: 1);
+  final CoinController coinController = CoinController();
+  late Timer _timer;
+  final Duration _duration = Duration(hours: 1);
 
   final Map<String, String> cryptoImages = {
     'BTC': 'https://cryptologos.cc/logos/bitcoin-btc-logo.png',
@@ -69,18 +69,19 @@ class _GuestPageState extends State<GuestPage> {
     'LEO': 'https://cryptologos.cc/logos/unus-sed-leo-leo-logo.png',
     'DOT': 'https://cryptologos.cc/logos/polkadot-new-dot-logo.png',
     'AVAX': 'https://cryptologos.cc/logos/avalanche-avax-logo.png',
-
   };
-
 
   @override
   void initState() {
     super.initState();
     fetchCoin();
-    _timer=Timer.periodic(_duration, (timer) { fetchCoin();});
+    _timer = Timer.periodic(_duration, (timer) {
+      fetchCoin();
+    });
   }
+
   @override
-  void dispose(){
+  void dispose() {
     _timer.cancel();
     super.dispose();
   }
@@ -91,7 +92,8 @@ class _GuestPageState extends State<GuestPage> {
 
       // Update each coin with the corresponding image URL from the map
       List<Coin> updatedCoins = fetchedCoin.map((coin) {
-        String imageUrl = cryptoImages[coin.symbol] ?? 'https://cryptologos.cc/logos/default.png'; // Fallback image
+        String imageUrl = cryptoImages[coin.symbol] ??
+            'https://cryptologos.cc/logos/default.png'; // Fallback image
         return Coin(
           name: coin.name,
           symbol: coin.symbol,
@@ -110,13 +112,12 @@ class _GuestPageState extends State<GuestPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     double Height = MediaQuery.of(context).size.height;
     double Width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(),
+        appBar: AppBar(),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
@@ -136,13 +137,18 @@ class _GuestPageState extends State<GuestPage> {
                       left: 25,
                       top: 90,
                       child: MaterialButton(
-                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp()));},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignUp()));
+                        },
                         child: Container(
                           child: Center(
                               child: Text(
-                                'SignUp',
-                                style: TextStyle(color: Colors.green),
-                              )),
+                            'SignUp',
+                            style: TextStyle(color: Colors.green),
+                          )),
                           height: 30,
                           width: Width * 0.35,
                           decoration: BoxDecoration(
@@ -158,11 +164,13 @@ class _GuestPageState extends State<GuestPage> {
                           children: [
                             Text(
                               'Hello Guest !!!',
-                              style: TextStyle(color: Colors.white,fontSize: 23),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 23),
                             ),
                             Text(
-                              'Welcome to Bee Coin Cap,\n do well to SignUp',
-                              style: TextStyle(color: Colors.white, fontSize: 15),
+                              'Welcome to Bee CoinCap!\n please be sure  to SignUp',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
                             )
                           ],
                         )),
@@ -183,16 +191,18 @@ class _GuestPageState extends State<GuestPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 14,),
+                SizedBox(
+                  height: 14,
+                ),
                 Container(
-                  height: Height*0.57,
-                  child:
-                  ListView.builder(
+                  height: Height * 0.57,
+                  child: ListView.builder(
                     itemCount: coinList.length,
                     itemBuilder: (context, index) {
                       return CoinCard(
                         price: coinList[index].price.toDouble(),
-                        changePercentage: coinList[index].changePercentage.toDouble(),
+                        changePercentage:
+                            coinList[index].changePercentage.toDouble(),
                         change: coinList[index].change.toDouble(),
                         symbol: coinList[index].symbol,
                         name: coinList[index].name,

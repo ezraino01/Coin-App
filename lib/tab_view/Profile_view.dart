@@ -259,10 +259,10 @@ import 'package:cryptomania/Terms%20and%20Conditions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cryptomania/UserModel.dart';
 import 'package:cryptomania/Login.dart';
-
 
 class Profile extends StatefulWidget {
   final Users users;
@@ -376,7 +376,6 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -399,11 +398,8 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   InkWell(
-                    onDoubleTap: () {
-                      _showProfilePicture();
-                    },
                     onTap: () {
-                      selectImage();
+                      _showProfilePicture();
                     },
                     child: Center(
                       child: Padding(
@@ -452,6 +448,19 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                   ),
+                  Positioned(
+                    top: 70,
+                    left: 220,
+                    child: Row(
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              selectImage();
+                            },
+                            child: Icon(Icons.add_a_photo)),
+                      ],
+                    ),
+                  )
                 ],
               ),
               const SizedBox(

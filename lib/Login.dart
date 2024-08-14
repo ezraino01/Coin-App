@@ -260,6 +260,7 @@
 
 import 'package:cryptomania/Controller/UserController.dart';
 import 'package:cryptomania/CustomText.dart';
+import 'package:cryptomania/Guest_page.dart';
 import 'package:cryptomania/InterFace.dart';
 import 'package:cryptomania/SignUp.dart';
 import 'package:cryptomania/UserModel.dart';
@@ -554,7 +555,14 @@ class _LoginState extends State<Login> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => SignUp()));
                   },
-                  child: Text('create a LionTrade Account'),
+                  child: Text('create a Bee CoinCap Account'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => GuestPage()));
+                  },
+                  child: Text('continue as a guest'),
                 ),
               ],
             ),
