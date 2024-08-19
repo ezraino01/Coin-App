@@ -1,5 +1,6 @@
 import 'package:cryptomania/Guest_page.dart';
 import 'package:cryptomania/Login.dart';
+import 'package:cryptomania/SignUp.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -25,180 +26,141 @@ class _OnboardingState extends State<Onboarding> {
           PageView(
             controller: _pageController,
             children: [
-              // Page 1
-              Stack(
-                children: [
-                  Container(
-                    height: height,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/img_3.png'),
-                        fit: BoxFit.fill,
-                      ),
+              //1
+              Padding(
+                padding: const EdgeInsets.only(top: 85),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 70,
+                      backgroundImage: AssetImage('assets/images/img_3.png'),
                     ),
-                  ),
-                  Positioned(
-                    top: 50,
-                    left: 16,
-                    right: 16,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Welcome to Bee',
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueGrey,
-                          ),
-                        ),
-                        Text(
-                          'CoinCap',
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueGrey,
-                          ),
-                        ),
-                      ],
+                    SizedBox(
+                      height: height * 0.2,
                     ),
-                  ),
-                ],
-              ),
-              // Page 2
-              Stack(
-                children: [
-                  Container(
-                    height: height,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/img_2.png'),
-                        fit: BoxFit.fill,
-                      ),
+                    Text(
+                      'Welcome to Bee \n CoinCap',
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  Positioned(
-                    top: 50,
-                    left: 16,
-                    right: 16,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Track Your',
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueGrey,
-                          ),
-                        ),
-                        Text(
-                          'Cryptocurrency',
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueGrey,
-                          ),
-                        ),
-                      ],
+                    SizedBox(
+                      height: height * 0.06,
                     ),
-                  ),
-                ],
-              ),
-              // Page 3
-              Stack(
-                children: [
-                  Container(
-                    height: height,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/img_1.png'),
-                        fit: BoxFit.fill,
-                      ),
+                    Text(
+                        'There\'s something for everyone to enjoy\n with bee CoinCap'),
+                    SizedBox(
+                      height: height * 0.1,
                     ),
-                  ),
-                  Positioned(
-                    top: 50,
-                    left: 16,
-                    right: 16,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Stay Updated',
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueGrey,
-                          ),
-                        ),
-                        Text(
-                          'With Latest Trends',
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueGrey,
-                          ),
-                        ),
-                        SizedBox(
-                          height: height * 0.5,
-                        ),
-                        Row(
+                    InkWell(
+                      onTap: () {
+                        _pageController.animateToPage(2,
+                            duration: Duration(milliseconds: 500),
+                            curve: Curves.easeInOut);
+                      },
+                      child: Container(
+                        height: 50,
+                        width: width * 0.8,
+                        decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => GuestPage()));
-                                },
-                                child: Text(
-                                  'Continue as a guest',
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.green[100]),
-                                )),
+                            Text(
+                              'Get Started',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500),
+                            ),
                             SizedBox(
-                              width: 15,
+                              width: 25,
                             ),
                             Icon(
-                              Icons.person_2_rounded,
-                              color: Colors.green[100],
+                              Icons.arrow_forward,
+                              color: Colors.white,
                             )
                           ],
                         ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              //2
+              Column(
+                children: [
+                  Container(
+                    height: height * 1,
+                    width: double.infinity,
+                    color: Colors.green,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 70),
+                          child: Text(
+                            'Your crypto journey \nis about to get better\n with the Bee App',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
                         SizedBox(
-                          height: 20,
+                          height: height * 0.06,
                         ),
-                        Row(
-                          children: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Login()));
-                                },
-                                child: Text(
-                                  'Continue as a User',
+                        Text(
+                          'There\'s something for everyone to enjoy\n with bee CoinCap',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        SizedBox(
+                          height: height * 0.15,
+                        ),
+                        CircleAvatar(
+                          radius: 70,
+                          backgroundImage:
+                              AssetImage('assets/images/img_1.png'),
+                        ),
+                        SizedBox(
+                          height: height * 0.115,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignUp()));
+                          },
+                          child: Container(
+                            height: 50,
+                            width: width * 0.8,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Get Started',
                                   style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.green),
-                                )),
-                            SizedBox(
-                              width: 15,
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBox(
+                                  width: 25,
+                                ),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  color: Colors.black,
+                                )
+                              ],
                             ),
-                            Icon(
-                              Icons.person_2_rounded,
-                              color: Colors.green,
-                            )
-                          ],
-                        ),
+                          ),
+                        )
                       ],
                     ),
-                  ),
+                  )
                 ],
               ),
             ],
@@ -211,10 +173,10 @@ class _OnboardingState extends State<Onboarding> {
             child: Center(
               child: SmoothPageIndicator(
                 controller: _pageController,
-                count: 3, // Number of pages
+                count: 2, // Number of pages
                 effect: WormEffect(
-                  dotHeight: 12,
-                  dotWidth: 12,
+                  dotHeight: 7,
+                  dotWidth: 20,
                   activeDotColor: Colors.blueGrey,
                 ),
               ),

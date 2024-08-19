@@ -370,6 +370,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'CustomText.dart';
 import 'Email verification Page.dart';
+import 'Guest_page.dart';
 import 'InterFace.dart';
 
 class SignUp extends StatefulWidget {
@@ -463,9 +464,9 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -697,11 +698,22 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => GuestPage()), // Replace with your destination page
+                    );
+                  },
+                  child: Text('Continue as Guest'),
+                )
+
               ],
             ),
           ),
         ),
       ),
+
     );
   }
 }
