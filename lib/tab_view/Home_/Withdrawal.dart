@@ -3,14 +3,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Withdrawal extends StatefulWidget {
-  const Withdrawal({super.key});
+class Withdraw extends StatefulWidget {
+  const Withdraw({super.key});
 
   @override
-  State<Withdrawal> createState() => _DepositState();
+  State<Withdraw> createState() => _DepositState();
 }
 
-class _DepositState extends State<Withdrawal> {
+class _DepositState extends State<Withdraw> {
   String input = '';
 
   void addToInput(String number) {
@@ -34,14 +34,14 @@ class _DepositState extends State<Withdrawal> {
         leading: InkWell(
             onTap: (){Navigator.pop(context);},
             child: Icon(Icons.arrow_back_ios_new)),
-        title: Text('Withdraw NGN'),
+        title: Text('Withdraw USD'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'enter emount NGN',
+              'enter emount USD',
               style: TextStyle(color: Colors.black45),
             ),
             SizedBox(
@@ -153,7 +153,7 @@ class _DepositState extends State<Withdrawal> {
               child: MaterialButton(
                 onPressed: () {},
                 child: Text(
-                  'Withdraw NGN',
+                  'Withdraw USD',
                   style: TextStyle(color: Colors.white, fontSize: 17),
                 ),
                 color: Colors.green,

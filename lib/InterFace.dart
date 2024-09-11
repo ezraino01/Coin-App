@@ -1,9 +1,9 @@
 import 'package:cryptomania/UserModel.dart';
+import 'package:cryptomania/tab_view/Home_/home_view.dart';
 import 'package:cryptomania/tab_view/Market_view.dart';
 import 'package:cryptomania/tab_view/Portfolio_view.dart';
 import 'package:cryptomania/tab_view/Profile_view.dart';
 import 'package:cryptomania/tab_view/Trade_view.dart';
-import 'package:cryptomania/tab_view/home_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +20,7 @@ class _DepositAndWithdrawalState extends State<InterFace> {
     double Height = MediaQuery.of(context).size.height;
     double Width = MediaQuery.of(context).size.width;
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -30,7 +30,7 @@ class _DepositAndWithdrawalState extends State<InterFace> {
         body: TabBarView(children: [
           HomeView(users:widget.users,),
          // Portfolio(users:widget.users,),
-        //  Trade(users: widget.users,),
+          Trade(users: widget.users,),
           Market(),
           Profile(users: widget.users,),
         ]),
@@ -43,10 +43,10 @@ class _DepositAndWithdrawalState extends State<InterFace> {
           //   icon: Icon(Icons.pie_chart_rounded),
           //   text: 'Portfolio',
           // ),
-          // Tab(
-          //   icon: Icon(Icons.card_giftcard),
-          //   text: 'Trade',
-          // ),
+          Tab(
+            icon: Icon(Icons.card_giftcard),
+            text: 'Trade',
+          ),
           Tab(
             icon: Icon(Icons.show_chart),
             text: 'Market',

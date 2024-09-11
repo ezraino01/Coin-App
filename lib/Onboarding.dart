@@ -62,7 +62,7 @@ class _OnboardingState extends State<Onboarding> {
                         width: width * 0.8,
                         decoration: BoxDecoration(
                             color: Colors.green,
-                            borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(10)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -136,7 +136,7 @@ class _OnboardingState extends State<Onboarding> {
                             width: width * 0.8,
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(20)),
+                                borderRadius: BorderRadius.circular(10)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

@@ -34,14 +34,14 @@ class _DepositState extends State<Deposit> {
         //       Navigator.pop(context);
         //     },
         //     child: Icon(Icons.arrow_back_ios_new)),
-        title: Text('Deposit NGN'),
+        title: Text('Deposit USD'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'enter emount NGN',
+              'enter emount USD',
               style: TextStyle(color: Colors.black45),
             ),
             SizedBox(
@@ -186,7 +186,7 @@ class _DepositState extends State<Deposit> {
               child: MaterialButton(
                 onPressed: () {},
                 child: Text(
-                  'Deposit NGN',
+                  'Deposit USD',
                   style: TextStyle(color: Colors.white, fontSize: 17),
                 ),
                 color: Colors.green,

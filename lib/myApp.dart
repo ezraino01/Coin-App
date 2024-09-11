@@ -1,11 +1,9 @@
 
 import 'package:cryptomania/Controller/CoinController.dart';
 import 'package:cryptomania/Controller/Texting%20Api.dart';
-import 'package:cryptomania/Deposit.dart';
 import 'package:cryptomania/Login.dart';
 import 'package:cryptomania/ResetPassword.dart';
 import 'package:cryptomania/SignUp.dart';
-import 'package:cryptomania/Withdrawal.dart';
 import 'package:cryptomania/tab_view/Portfolio_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,16 +12,23 @@ import 'InterFace.dart';
 import 'Onboarding.dart';
 import 'myHomePage.dart';
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Dark Light',
       theme: ThemeData(
+        brightness: Brightness.light,
+        primarySwatch: Colors.red,
         // This is the theme of your application.
         //
         // TRY THIS: Try running your application with "flutter run". You'll see
@@ -39,9 +44,15 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
+      darkTheme:ThemeData(
+        brightness: Brightness.dark,
+            primarySwatch: Colors.red,
+         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.white10)
+      ) ,
+      themeMode: ThemeMode.system,
       home: const   Onboarding(),
     );
   }

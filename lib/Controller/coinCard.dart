@@ -28,15 +28,15 @@ class CoinCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey,
-              offset: Offset(4, 4),
-              blurRadius: 20,
+              color: Colors.white,
+             // offset: Offset(4, 4),
+            //  blurRadius: 20,
               spreadRadius: 1,
             ),
             BoxShadow(
-              color: Colors.grey,
-              offset: Offset(-4, -4),
-              blurRadius: 20,
+              color: Colors.white,
+             // offset: Offset(-4, -4),
+            //  blurRadius: 20,
               spreadRadius: 1,
             )
           ],
